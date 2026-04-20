@@ -694,9 +694,9 @@
       { name: 'Maties',  region: 'WR', regSeed: 3, own25: 5,  own25Renum: 3, refGroup: 'B', pool: 'A', noOwn25Rule: null },
       { name: 'Gradient',region: 'WR', regSeed: 4, own25: 8,  own25Renum: 6, refGroup: 'B', pool: 'A', noOwn25Rule: null },
       { name: 'UFH',     region: 'SR', regSeed: 1, own25: 10, own25Renum: 7, refGroup: 'B', pool: 'A', noOwn25Rule: null },
-      { name: 'Zephyr',  region: 'WR', regSeed: 2, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 1, reason: 'WR1 Mutiny is in Pool B — Zephyr must be in a different pool from their region\'s 1st seed.' } },
+      { name: 'Zephyr',  region: 'WR', regSeed: 2, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 1, reason: 'WR1 Mutiny is in Pool B — Zephyr (WR2) must be in a different pool from their region\'s 1st seed.' } },
       { name: 'Wits',    region: 'NR', regSeed: 3, own25: null, own25Renum: null, refGroup: null, pool: 'B', noOwn25Rule: { rule: 2, reason: 'Maties finished 3rd at WR Regionals and is in Pool A — Wits goes to the opposite pool.' } },
-      { name: 'SA u20',  region: 'ER', regSeed: 2, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 1, reason: 'ER1 Bunnies is in Pool B — SA u20 must be in a different pool from their region\'s 1st seed.' } },
+      { name: 'SA u20',  region: 'ER', regSeed: 2, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 1, reason: 'ER1 Bunnies is in Pool B — SA u20 (ER2) must be in a different pool from their region\'s 1st seed.' } },
       { name: 'ManCubs', region: 'WR', regSeed: 5, own25: null, own25Renum: null, refGroup: null, pool: 'B', noOwn25Rule: { rule: 3, reason: 'No team from another region finished 5th at Regionals. WR already has Zephyr, Maties, Gradient in Pool A; Mutiny in Pool B. ManCubs goes to Pool B for regional balance.' } },
     ];
 
@@ -1008,8 +1008,8 @@
                   <div class="card-title">Rules (applied in order)</div>
                   <div class="rule-card active">
                     <div class="rule-num">✓ Rule 1 — Regional Separation</div>
-                    <div class="rule-text">Must be in a different pool from their region's 1st seed.</div>
-                    <div class="rule-result">WR1 = Mutiny → Pool B<br>Therefore Zephyr → <span class="pool-a-label">Pool A</span> ✓</div>
+                    <div class="rule-text">Regionals 2nd seed must be in a different pool from their region's 1st seed.</div>
+                    <div class="rule-result">WR1 = Mutiny → Pool B<br>Therefore Zephyr (WR2) → <span class="pool-a-label">Pool A</span> ✓</div>
                   </div>
                   <div class="rule-card inactive">
                     <div class="rule-num">Rule 2 — Regionals Matching</div>
@@ -1056,8 +1056,8 @@
                   <div class="card-title">Rules (applied in order)</div>
                   <div class="rule-card active">
                     <div class="rule-num">✓ Rule 1 — Regional Separation</div>
-                    <div class="rule-text">Must be in a different pool from their region's 1st seed.</div>
-                    <div class="rule-result">ER1 = Bunnies → Pool B<br>Therefore SA u20 → <span class="pool-a-label">Pool A</span> ✓</div>
+                    <div class="rule-text">Regionals 2nd seed must be in a different pool from their region's 1st seed.</div>
+                    <div class="rule-result">ER1 = Bunnies → Pool B<br>Therefore SA u20 (ER2) → <span class="pool-a-label">Pool A</span> ✓</div>
                   </div>
                   <div class="rule-card inactive">
                     <div class="rule-num">Rule 2 — Regionals Matching</div>
@@ -1102,9 +1102,9 @@
                 </div>
                 <div class="card">
                   <div class="card-title">Rules (applied in order)</div>
-                  <div class="rule-card passed">
-                    <div class="rule-num">↳ Rule 1 — Regional Separation (also applies)</div>
-                    <div class="rule-text">NR1 = Rex → Pool A. So Wits should go to Pool B. Same conclusion as Rule 2.</div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">✗ Rule 1 — Regional Separation</div>
+                    <div class="rule-text">Regionals 2nd place must be in a different pool from their region's 1st seed.</div>
                   </div>
                   <div class="rule-card active">
                     <div class="rule-num">✓ Rule 2 — Regionals Matching</div>
@@ -1157,8 +1157,7 @@
                   <div class="card-title">Rules (applied in order)</div>
                   <div class="rule-card inactive">
                     <div class="rule-num">✗ Rule 1 — Regional Separation</div>
-                    <div class="rule-text">WR1 = Mutiny → Pool B. So ManCubs must go to Pool A. But this conflicts with balance (see Rule 3).</div>
-                    <div class="rule-result" style="color:var(--er)">Actually — Mutiny being in Pool B means ManCubs can go to Pool A by Rule 1 too, but Rule 3 gives Pool B. Rule 1 leaves both options open when there are multiple WR teams; Rule 3 breaks the tie.</div>
+                    <div class="rule-text">Regionals 2nd place must be in a different pool from their region's 1st seed.</div>
                   </div>
                   <div class="rule-card inactive">
                     <div class="rule-num">✗ Rule 2 — Regionals Matching</div>
