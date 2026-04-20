@@ -951,11 +951,20 @@
                     <span class="regions-active-label">All OWN25 teams</span>
                     ${['WR','NR','ER','SR'].map(r => regionActiveBadge(r)).join('')}
                   </div>
-                  ${OWN25_TEAMS.map(t => `
-                    <div class="team-pill highlighted ${t.refGroup === 'A' ? 'group-a' : 'group-b'}">
+                  <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--group-b);margin:10px 0 6px">Group B → <span style="color:var(--pool-a-light)">Pool A</span></div>
+                  ${groupB.map(t => `
+                    <div class="team-pill highlighted group-b">
                       <span class="team-name">${t.name}</span>
                       ${badge(t.region)}
-                      <span class="seed-num">Group ${t.refGroup} → Pool ${t.pool}</span>
+                      <span class="seed-num">#${t.own25Renum} (OWN25: ${t.own25})</span>
+                    </div>
+                  `).join('')}
+                  <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--group-a);margin:14px 0 6px">Group A → <span style="color:var(--pool-b-light)">Pool B</span></div>
+                  ${groupA.map(t => `
+                    <div class="team-pill highlighted group-a">
+                      <span class="team-name">${t.name}</span>
+                      ${badge(t.region)}
+                      <span class="seed-num">#${t.own25Renum} (OWN25: ${t.own25})</span>
                     </div>
                   `).join('')}
                 </div>
