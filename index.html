@@ -741,7 +741,7 @@
         : t.noOwn25Rule ? `Rule ${t.noOwn25Rule.rule}: ${t.noOwn25Rule.reason}` : '';
 
       return `
-        <div class="pool-team ${isNew ? 'just-assigned' : ''}" id="pt-${name.replace(/\s+/g,'-')}">
+        <div class="pool-team ${isNew ? 'just-assigned highlighted-in-pool' : ''}" id="pt-${name.replace(/\s+/g,'-')}">
           <span>${name}</span>
           ${badge(t.region)}
           ${showRationale && rationale ? `<button class="rationale-btn" onclick="toggleRationale('r-${name.replace(/\s+/g,'-')}')">why?</button>` : ''}
