@@ -34,6 +34,14 @@ A single-page static site explaining the pool seeding process for OWN 2026 Opens
 
 4. Visit `https://<DOMAIN>` in a browser.
 
+## Redeploying
+
+After updating `index.html` on the server, restart the container to pick up the changes:
+
+```sh
+docker compose restart
+```
+
 ## Stopping
 
 ```sh
