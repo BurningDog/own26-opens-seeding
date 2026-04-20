@@ -1,0 +1,4 @@
+{$DOMAIN} {
+    root * /srv
+    file_server
+}
