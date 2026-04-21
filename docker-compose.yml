@@ -10,6 +10,8 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./index.html:/srv/index.html:ro
+      - ./donkeys.html:/srv/donkeys.html:ro
+      - ./old.html:/srv/old.html:ro
       - caddy_data:/data
       - caddy_config:/config
 
