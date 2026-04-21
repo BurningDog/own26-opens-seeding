@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OWN 2026 Opens — Pool Seeding (12-team / Donkeys scenario)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #19223a;
+      --bg2: #1f2b48;
+      --bg3: #263456;
+      --border: #2e3f63;
+      --text: #f2f5ff;
+      --muted: #9aaabf;
+      --pool-a: #5aace0;
+      --pool-a-bg: #162d42;
+      --pool-a-light: #8ecae6;
+      --pool-b: #d43f50;
+      --pool-b-bg: #3a1520;
+      --pool-b-light: #e8838f;
+      --group-a: #4ecdc4;
+      --group-b: #a78bfa;
+      --highlight: #fef08a;
+      --highlight-bg: #3d3700;
+      --wr: #5aace0;
+      --nr: #7ec8e3;
+      --er: #d43f50;
+      --sr: #e8a0aa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .header-title span {
+      color: var(--pool-a);
+    }
+
+    .header-scenario {
+      font-size: 0.78rem;
+      background: rgba(254,240,138,0.15);
+      border: 1px solid rgba(254,240,138,0.35);
+      color: var(--highlight);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .step-counter {
+      font-size: 0.85rem;
+      color: var(--muted);
+      background: var(--bg3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--bg3);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--pool-a), var(--pool-b));
+      transition: width 0.4s ease;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 20px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .step-header {
+      text-align: center;
+    }
+
+    .step-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .step-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step-subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+    .badge-WR { background: rgba(34,197,94,0.2); color: var(--wr); border: 1px solid rgba(34,197,94,0.3); }
+    .badge-NR { background: rgba(96,165,250,0.2); color: var(--nr); border: 1px solid rgba(96,165,250,0.3); }
+    .badge-ER { background: rgba(248,113,113,0.2); color: var(--er); border: 1px solid rgba(248,113,113,0.3); }
+    .badge-SR { background: rgba(192,132,252,0.2); color: var(--sr); border: 1px solid rgba(192,132,252,0.3); }
+
+    .team-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      margin-bottom: 6px;
+      transition: all 0.3s ease;
+      cursor: default;
+      position: relative;
+    }
+
+    .team-pill .team-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .team-pill .seed-num {
+      font-size: 0.72rem;
+      color: var(--muted);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .team-pill.highlighted {
+      background: var(--highlight-bg);
+      border-color: var(--highlight);
+      box-shadow: 0 0 0 1px var(--highlight), 0 0 16px rgba(254,240,138,0.15);
+    }
+
+    .team-pill.highlighted .team-name {
+      color: var(--highlight);
+    }
+
+    .team-pill.group-a { border-left: 3px solid var(--group-a); }
+    .team-pill.group-b { border-left: 3px solid var(--group-b); }
+    .team-pill.pool-a  { border-left: 3px solid var(--pool-a); }
+    .team-pill.pool-b  { border-left: 3px solid var(--pool-b); }
+
+    .pools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pool-column {
+      border-radius: 10px;
+      padding: 14px;
+      min-height: 200px;
+    }
+
+    .pool-a-col {
+      background: rgba(59,130,246,0.06);
+      border: 1px solid rgba(59,130,246,0.25);
+    }
+
+    .pool-b-col {
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.25);
+    }
+
+    .pool-header {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pool-a-col .pool-header { color: var(--pool-a-light); }
+    .pool-b-col .pool-header { color: var(--pool-b-light); }
+
+    .pool-team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: default;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .pool-a-col .pool-team {
+      background: rgba(59,130,246,0.12);
+      color: var(--pool-a-light);
+    }
+
+    .pool-b-col .pool-team {
+      background: rgba(245,158,11,0.12);
+      color: var(--pool-b-light);
+    }
+
+    .pool-team.just-assigned {
+      animation: popIn 0.4s ease forwards;
+    }
+
+    .pool-team.highlighted-in-pool {
+      box-shadow: 0 0 0 1px var(--highlight), 0 0 10px rgba(254,240,138,0.2);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      60% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .rationale-btn {
+      font-size: 0.65rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .rationale-btn:hover { color: var(--text); border-color: var(--muted); }
+
+    .rationale-text {
+      display: none;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 4px;
+      padding: 6px 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      border-left: 2px solid var(--border);
+      line-height: 1.5;
+    }
+
+    .rationale-text.visible { display: block; }
+
+    .snake-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+    }
+
+    .snake-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      min-width: 72px;
+      flex: 1;
+      transition: all 0.3s ease;
+    }
+
+    .snake-box .snake-num  { font-size: 0.7rem; color: var(--muted); }
+    .snake-box .snake-name { font-size: 0.8rem; font-weight: 700; text-align: center; }
+    .snake-box .snake-group { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+
+    .snake-box.group-a-box {
+      background: rgba(16,185,129,0.08);
+      border-color: rgba(16,185,129,0.3);
+    }
+
+    .snake-box.group-b-box {
+      background: rgba(139,92,246,0.08);
+      border-color: rgba(139,92,246,0.3);
+    }
+
+    .snake-box.group-a-box .snake-group { background: rgba(16,185,129,0.2); color: var(--group-a); }
+    .snake-box.group-b-box .snake-group { background: rgba(139,92,246,0.2); color: var(--group-b); }
+
+    .rule-card {
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .rule-card.active  { border-color: var(--highlight); background: var(--highlight-bg); }
+    .rule-card.inactive { opacity: 0.45; }
+    .rule-card.passed  { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.05); }
+
+    .rule-num { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .rule-card.active .rule-num  { color: var(--highlight); }
+    .rule-card.passed .rule-num  { color: var(--group-a); }
+    .rule-card.inactive .rule-num { color: var(--muted); }
+
+    .rule-text   { font-size: 0.85rem; line-height: 1.5; }
+    .rule-result { margin-top: 6px; font-size: 0.8rem; font-weight: 600; }
+    .rule-card.active .rule-result { color: var(--highlight); }
+    .rule-card.passed .rule-result { color: var(--group-a); }
+
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    .ref-table th {
+      text-align: left; padding: 6px 10px; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .ref-table td { padding: 7px 10px; border-bottom: 1px solid rgba(46,51,71,0.5); }
+    .ref-table tr.highlighted-row td { background: var(--highlight-bg); color: var(--highlight); }
+    .ref-table tr.group-a-row td:last-child { color: var(--group-a); font-weight: 700; }
+    .ref-table tr.group-b-row td:last-child { color: var(--group-b); font-weight: 700; }
+
+    .group-a-label { color: var(--group-a); font-weight: 700; }
+    .group-b-label { color: var(--group-b); font-weight: 700; }
+    .pool-a-label  { color: var(--pool-a-light); font-weight: 700; }
+    .pool-b-label  { color: var(--pool-b-light); font-weight: 700; }
+
+    .regions-active { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .regions-active-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .region-active-badge {
+      font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 5px;
+      animation: pulse 2s ease infinite;
+    }
+    .region-active-badge.WR { background: rgba(34,197,94,0.25); color: var(--wr); border: 1px solid rgba(34,197,94,0.5); }
+    .region-active-badge.NR { background: rgba(96,165,250,0.25); color: var(--nr); border: 1px solid rgba(96,165,250,0.5); }
+    .region-active-badge.ER { background: rgba(248,113,113,0.25); color: var(--er); border: 1px solid rgba(248,113,113,0.5); }
+    .region-active-badge.SR { background: rgba(192,132,252,0.25); color: var(--sr); border: 1px solid rgba(192,132,252,0.5); }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
+
+    nav {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg3); color: var(--text);
+      font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+    }
+    .btn:hover { background: var(--border); border-color: var(--muted); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .btn-primary { background: var(--pool-a); border-color: var(--pool-a); color: #fff; }
+    .btn-primary:hover { background: #2563eb; border-color: #2563eb; }
+
+    .btn-skip { background: transparent; border-color: var(--border); color: var(--muted); font-size: 0.8rem; padding: 8px 16px; }
+    .btn-skip:hover { color: var(--text); }
+
+    .legend {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      padding: 12px 16px; background: var(--bg3);
+      border-radius: 8px; border: 1px solid var(--border);
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--muted); }
+    .legend-dot  { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+    .info-box {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 14px;
+      font-size: 0.83rem; line-height: 1.6; color: var(--muted);
+    }
+    .info-box strong { color: var(--text); }
+    .info-box.note  { border-left: 3px solid var(--pool-a); }
+    .info-box.warn  { border-left: 3px solid var(--highlight); background: rgba(61,55,0,0.4); }
+
+    .step-content { animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .assigned-tag { font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; }
+    .tag-a { background: rgba(59,130,246,0.2); color: var(--pool-a-light); }
+    .tag-b { background: rgba(245,158,11,0.2); color: var(--pool-b-light); }
+
+    .empty-pool { color: var(--muted); font-size: 0.8rem; font-style: italic; text-align: center; padding: 20px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-title">OWN 2026 Opens — <span>Pool Seeding</span> Walkthrough</div>
+    <div class="header-scenario">Scenario: Donkeys attending · 12 teams · 2 × 6</div>
+    <div class="step-counter" id="stepCounter">Step 1 of 9</div>
+  </header>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width: 11%"></div>
+  </div>
+
+  <main>
+    <div class="step-header" id="stepHeader">
+      <div class="step-label" id="stepLabel">Step 1 of 9</div>
+      <div class="step-title" id="stepTitle"></div>
+      <div class="step-subtitle" id="stepSubtitle"></div>
+    </div>
+
+    <div class="step-content" id="stepContent"></div>
+  </main>
+
+  <nav>
+    <button class="btn" id="btnPrev" onclick="navigate(-1)" disabled>← Previous</button>
+    <button class="btn btn-skip" id="btnBackToStart" onclick="backToStart()">↑ Back to start</button>
+    <button class="btn btn-skip" id="btnSkip" onclick="skipToEnd()">Skip to end ↓</button>
+    <button class="btn btn-primary" id="btnNext" onclick="navigate(1)">Next →</button>
+  </nav>
+
+  <script>
+    // ─── Data ────────────────────────────────────────────────────────────────
+
+    const REGIONS = {
+      WR: { label: 'WR', name: 'Western Region',  color: '#22c55e' },
+      NR: { label: 'NR', name: 'Northern Region', color: '#60a5fa' },
+      ER: { label: 'ER', name: 'Eastern Region',  color: '#f87171' },
+      SR: { label: 'SR', name: 'Southern Region', color: '#c084fc' },
+    };
+
+    // Donkeys attending: 12 teams. Donkeys is ER1 (placed 2nd at OWN25).
+    // Bunnies → ER2, SA u20 → ER3.
+    const ALL_TEAMS = [
+      { name: 'Mutiny',   region: 'WR', regSeed: 1, own25: 1,  own25Renum: 1, refGroup: 'A', pool: 'B', noOwn25Rule: null },
+      { name: 'Donkeys',  region: 'ER', regSeed: 1, own25: 2,  own25Renum: 2, refGroup: 'B', pool: 'A', noOwn25Rule: null },
+      { name: 'Rex',      region: 'NR', regSeed: 1, own25: 3,  own25Renum: 3, refGroup: 'B', pool: 'A', noOwn25Rule: null },
+      { name: 'Maties',   region: 'WR', regSeed: 3, own25: 5,  own25Renum: 4, refGroup: 'A', pool: 'B', noOwn25Rule: null },
+      { name: 'Bunnies',  region: 'ER', regSeed: 2, own25: 6,  own25Renum: 5, refGroup: 'A', pool: 'B', noOwn25Rule: null },
+      { name: 'Kaalvoet', region: 'NR', regSeed: 2, own25: 7,  own25Renum: 6, refGroup: 'B', pool: 'A', noOwn25Rule: null },
+      { name: 'Gradient', region: 'WR', regSeed: 4, own25: 8,  own25Renum: 7, refGroup: 'B', pool: 'A', noOwn25Rule: null },
+      { name: 'UFH',      region: 'SR', regSeed: 1, own25: 10, own25Renum: 8, refGroup: 'A', pool: 'B', noOwn25Rule: null },
+      { name: 'Zephyr',   region: 'WR', regSeed: 2, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 1, reason: 'WR1 Mutiny is in Pool B — Zephyr (WR2) must be in a different pool from their region\'s 1st seed.' } },
+      { name: 'SA u20',   region: 'ER', regSeed: 3, own25: null, own25Renum: null, refGroup: null, pool: 'B', noOwn25Rule: { rule: 3, reason: 'SA u20\'s combined score (nationals + regionals) is 6, the same as Gradient (also 6), who is in Pool A. SA u20 goes to Pool B — the opposite pool from their nearest comparable.' } },
+      { name: 'Wits',     region: 'NR', regSeed: 3, own25: null, own25Renum: null, refGroup: null, pool: 'B', noOwn25Rule: { rule: 2, reason: 'Pool A already has Rex (NR1) and Kaalvoet (NR2). Pool B has no NR teams yet. Rule 2 (regional balance) sends Wits to Pool B.' } },
+      { name: 'ManCubs',  region: 'WR', regSeed: 5, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 3, reason: 'ManCubs\' combined score (nationals + regionals) is 1, the same as UFH (also 1), who is in Pool B. ManCubs goes to Pool A — the opposite pool from their nearest comparable.' } },
+    ];
+
+    // ABBA snake for 8 teams: A,B,B,A,A,B,B,A
+    // Group A (→ Pool B): Mutiny(1), Maties(4), Bunnies(5), UFH(8)
+    // Group B (→ Pool A): Donkeys(2), Rex(3), Kaalvoet(6), Gradient(7)
+    const OWN25_TEAMS    = ALL_TEAMS.filter(t => t.own25 !== null).sort((a, b) => a.own25Renum - b.own25Renum);
+    const NO_OWN25_TEAMS = [
+      ALL_TEAMS.find(t => t.name === 'Zephyr'),
+      ALL_TEAMS.find(t => t.name === 'SA u20'),
+      ALL_TEAMS.find(t => t.name === 'Wits'),
+      ALL_TEAMS.find(t => t.name === 'ManCubs'),
+    ];
+
+    // Step indices: 0=intro, 1=own25ref, 2=snake, 3=assign-own25, 4=zephyr, 5=sa-u20, 6=wits, 7=mancubs, 8=final
+    const STEP_POOL_STATE = [
+      { A: [], B: [] }, // 0
+      { A: [], B: [] }, // 1
+      { A: [], B: [] }, // 2
+      { A: [], B: [] }, // 3
+      { A: ['Donkeys','Rex','Kaalvoet','Gradient'], B: ['Mutiny','Maties','Bunnies','UFH'] }, // 4
+      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr'], B: ['Mutiny','Maties','Bunnies','UFH'] }, // 5
+      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr'], B: ['Mutiny','Maties','Bunnies','UFH','Wits'] }, // 6 — after Wits
+      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr'], B: ['Mutiny','Maties','Bunnies','UFH','Wits','SA u20'] }, // 7 — after SA u20
+      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr','ManCubs'], B: ['Mutiny','Maties','Bunnies','UFH','Wits','SA u20'] }, // 8
+    ];
+
+    function teamData(name) { return ALL_TEAMS.find(t => t.name === name); }
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    function badge(region) {
+      return `<span class="badge badge-${region}">${region}</span>`;
+    }
+
+    function regionActiveBadge(region) {
+      return `<span class="region-active-badge ${region}">${REGIONS[region].name} (${region})</span>`;
+    }
+
+    function poolTeamHTML(name, isNew = false, showRationale = false) {
+      const t = teamData(name);
+      const rationale = t.own25 !== null
+        ? `OWN25 placing: ${t.own25} → re-numbered ${t.own25Renum} → Group ${t.refGroup} → Pool ${t.pool}`
+        : t.noOwn25Rule ? `Rule ${t.noOwn25Rule.rule}: ${t.noOwn25Rule.reason}` : '';
+
+      return `
+        <div class="pool-team ${isNew ? 'just-assigned highlighted-in-pool' : ''}" id="pt-${name.replace(/\s+/g,'-')}">
+          <span>${name}</span>
+          ${badge(t.region)}
+          ${showRationale && rationale ? `<button class="rationale-btn" onclick="toggleRationale('r-${name.replace(/\s+/g,'-')}')">why?</button>` : ''}
+        </div>
+        ${showRationale && rationale ? `<div class="rationale-text" id="r-${name.replace(/\s+/g,'-')}">${rationale}</div>` : ''}
+      `;
+    }
+
+    function toggleRationale(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('visible');
+    }
+
+    function poolsHTML(stepIdx, newTeams = [], showRationale = false) {
+      const state = STEP_POOL_STATE[stepIdx];
+      const aHTML = state.A.length === 0
+        ? '<div class="empty-pool">No teams assigned yet</div>'
+        : state.A.map(n => poolTeamHTML(n, newTeams.includes(n), showRationale)).join('');
+      const bHTML = state.B.length === 0
+        ? '<div class="empty-pool">No teams assigned yet</div>'
+        : state.B.map(n => poolTeamHTML(n, newTeams.includes(n), showRationale)).join('');
+
+      return `
+        <div class="pools-grid">
+          <div class="pool-column pool-a-col">
+            <div class="pool-header">Pool A <span style="font-weight:400;color:var(--muted)">(${state.A.length} teams)</span></div>
+            ${aHTML}
+          </div>
+          <div class="pool-column pool-b-col">
+            <div class="pool-header">Pool B <span style="font-weight:400;color:var(--muted)">(${state.B.length} teams)</span></div>
+            ${bHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    // ─── Steps ───────────────────────────────────────────────────────────────
+
+    const STEPS = [
+
+      // ── 0: Introduction ──────────────────────────────────────────────────
+      {
+        label: 'Starting Point',
+        title: 'The Field: 12 Teams, 4 Regions',
+        subtitle: 'Donkeys (ER1) are attending OWN 2026. That gives us 12 teams and two equal pools of 6.',
+        render() {
+          const regionOrder = [
+            { r: 'WR', teams: ALL_TEAMS.filter(t => t.region === 'WR').sort((a,b) => a.regSeed - b.regSeed) },
+            { r: 'NR', teams: ALL_TEAMS.filter(t => t.region === 'NR').sort((a,b) => a.regSeed - b.regSeed) },
+            { r: 'ER', teams: ALL_TEAMS.filter(t => t.region === 'ER').sort((a,b) => a.regSeed - b.regSeed) },
+            { r: 'SR', teams: ALL_TEAMS.filter(t => t.region === 'SR').sort((a,b) => a.regSeed - b.regSeed) },
+          ];
+
+          const regionCards = regionOrder.map(({ r, teams }) => `
+            <div class="card" style="flex:1;min-width:180px">
+              <div class="card-title">${badge(r)} ${REGIONS[r].name}</div>
+              ${teams.map(t => `
+                <div class="team-pill">
+                  <span class="team-name">${t.name}</span>
+                  <span class="seed-num">${r}${t.regSeed}</span>
+                </div>
+              `).join('')}
+            </div>
+          `).join('');
+
+          return `
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">${regionCards}</div>
+            <div class="info-box note">
+              <strong>8 of these teams also played OWN 2025</strong> — their finishing positions there will guide pool assignment.
+              The other 4 (Zephyr, SA u20, Wits, ManCubs) have no OWN25 history and are placed using the regional rules.
+            </div>
+            <div style="margin-top:8px" class="info-box warn">
+              <strong>Key difference from the 11-team draw:</strong> Donkeys (ER1) has OWN25 history (placed 2nd in 2025).
+              Their inclusion shifts Bunnies to ER2 and SA u20 to ER3, and adds an 8th team to the OWN25 reference snake — producing an even 4–4 pool split before the remaining teams are placed.
+            </div>
+          `;
+        }
+      },
+
+      // ── 1: OWN25 reference ───────────────────────────────────────────────
+      {
+        label: 'OWN25 Reference',
+        title: 'Filter OWN 2025 Results',
+        subtitle: 'We only look at the OWN 2025 teams who are attending OWN 2026. We keep their relative order and re-number them 1 to 8.',
+        render() {
+          const rows = OWN25_TEAMS.map(t => `
+            <tr class="${t.refGroup === 'A' ? 'group-a-row' : 'group-b-row'}">
+              <td style="color:var(--muted)">${t.own25Renum}</td>
+              <td>${t.own25}</td>
+              <td><strong>${t.name}</strong></td>
+              <td>${badge(t.region)}</td>
+              <td>—</td>
+            </tr>
+          `).join('');
+
+          return `
+            <div class="content-grid">
+              <div>
+                <div class="card">
+                  <div class="card-title">OWN25 → OWN26 attendees only</div>
+                  <table class="ref-table">
+                    <thead><tr><th>Re#</th><th>OWN25 place</th><th>Team</th><th>Region</th><th>Group</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                  </table>
+                  <div style="margin-top:12px" class="info-box">
+                    Teams not attending OWN26 (Rambs, Malachites) are <strong>removed</strong>.
+                    Donkeys <em>are</em> attending — they appear at OWN25 position 2.
+                    Relative order of the 8 remaining teams is preserved. Groups are assigned in the next step.
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="card">
+                  <div class="card-title">Pools so far</div>
+                  ${poolsHTML(1)}
+                  <div style="margin-top:12px" class="info-box">No teams have been assigned to pools yet — that comes after the snake seeding.</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      // ── 2: Snake seeding ─────────────────────────────────────────────────
+      {
+        label: 'Snake Seeding',
+        title: 'Apply the Snake: ABBA…',
+        subtitle: 'We apply a two-pool snake to the 8 re-numbered OWN25 teams: 1→A, 2&3→B, 4&5→A, 6&7→B, 8→A. With 8 teams the snake produces exactly 4 in each group.',
+        render() {
+          const snakeBoxes = OWN25_TEAMS.map(t => `
+            <div class="snake-box ${t.refGroup === 'A' ? 'group-a-box' : 'group-b-box'}">
+              <span class="snake-num">#${t.own25Renum}</span>
+              <span class="snake-name">${t.name}</span>
+              <span class="snake-group">Group ${t.refGroup}</span>
+            </div>
+          `).join('');
+
+          const patternBoxes = ['A','B','B','A','A','B','B','A'].map((g,i) => `
+            <div class="snake-box ${g === 'A' ? 'group-a-box' : 'group-b-box'}">
+              <span class="snake-num">pos ${i+1}</span>
+              <span class="snake-name">→</span>
+              <span class="snake-group">Group ${g}</span>
+            </div>
+          `).join('');
+
+          const groupATeams = OWN25_TEAMS.filter(t => t.refGroup === 'A');
+          const groupBTeams = OWN25_TEAMS.filter(t => t.refGroup === 'B');
+
+          return `
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-title">Applying the ABBA snake to 8 OWN25 teams</div>
+              <div class="snake-row">${snakeBoxes}</div>
+            </div>
+            <div class="content-grid">
+              <div class="card">
+                <div class="card-title">Result: <span class="group-a-label">Group A</span></div>
+                ${groupATeams.map(t => `
+                  <div class="team-pill group-a">
+                    <span class="team-name">${t.name}</span>
+                    ${badge(t.region)}
+                    <span class="seed-num">#${t.own25Renum} (OWN25: ${t.own25})</span>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="card">
+                <div class="card-title">Result: <span class="group-b-label">Group B</span></div>
+                ${groupBTeams.map(t => `
+                  <div class="team-pill group-b">
+                    <span class="team-name">${t.name}</span>
+                    ${badge(t.region)}
+                    <span class="seed-num">#${t.own25Renum} (OWN25: ${t.own25})</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div style="margin-top:12px" class="info-box warn">
+              <strong>Rule 1 satisfied for ER via the snake:</strong> Donkeys (ER1) falls at position 2 → Group B → Pool A.
+              Bunnies (ER2) falls at position 5 → Group A → Pool B. The snake naturally keeps the top two ER seeds in separate pools — no manual override needed.
+            </div>
+          `;
+        }
+      },
+
+      // ── 3: Assign OWN25 teams ────────────────────────────────────────────
+      {
+        label: 'Assign OWN25 Teams',
+        title: 'OWN25 Group B → Pool A · OWN25 Group A → Pool B',
+        subtitle: 'Group B teams (higher seeds within the snake) go to Pool A to balance pool strength. Group A teams go to Pool B. With 8 OWN25 teams the split is exactly 4–4.',
+        render() {
+          const groupA = OWN25_TEAMS.filter(t => t.refGroup === 'A');
+          const groupB = OWN25_TEAMS.filter(t => t.refGroup === 'B');
+          return `
+            <div class="content-grid">
+              <div>
+                <div class="card" style="margin-bottom:12px">
+                  <div class="card-title">Assignment rule</div>
+                  <div style="display:flex;gap:12px;flex-wrap:wrap">
+                    <div style="flex:1;padding:12px;border-radius:8px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);text-align:center">
+                      <div style="font-size:0.75rem;color:var(--group-b);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Group B</div>
+                      <div style="font-size:1.5rem;font-weight:700">→</div>
+                      <div style="font-size:0.85rem;color:var(--pool-a-light);font-weight:700">Pool A</div>
+                    </div>
+                    <div style="flex:1;padding:12px;border-radius:8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);text-align:center">
+                      <div style="font-size:0.75rem;color:var(--group-a);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Group A</div>
+                      <div style="font-size:1.5rem;font-weight:700">→</div>
+                      <div style="font-size:0.85rem;color:var(--pool-b-light);font-weight:700">Pool B</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-title">Teams being assigned now</div>
+                  <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--group-b);margin:0 0 6px">Group B → <span style="color:var(--pool-a-light)">Pool A</span></div>
+                  ${groupB.map(t => `
+                    <div class="team-pill group-b">
+                      <span class="team-name">${t.name}</span>
+                      ${badge(t.region)}
+                      <span class="seed-num">#${t.own25Renum} (OWN25: ${t.own25})</span>
+                    </div>
+                  `).join('')}
+                  <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--group-a);margin:14px 0 6px">Group A → <span style="color:var(--pool-b-light)">Pool B</span></div>
+                  ${groupA.map(t => `
+                    <div class="team-pill group-a">
+                      <span class="team-name">${t.name}</span>
+                      ${badge(t.region)}
+                      <span class="seed-num">#${t.own25Renum} (OWN25: ${t.own25})</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Pools after this step</div>
+                ${poolsHTML(4, OWN25_TEAMS.map(t => t.name), true)}
+                <div style="margin-top:12px" class="info-box">
+                  Click "why?" buttons to see each team's rationale.
+                  4 teams still to place: Zephyr, SA u20, Wits, ManCubs.
+                </div>
+                <div style="margin-top:8px" class="info-box warn">
+                  <strong>Note:</strong> Donkeys (ER1) → Pool A · Bunnies (ER2) → Pool B.
+                  Rule 1 regional separation for ER is already satisfied by the snake.
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      // ── 4: Place Zephyr ──────────────────────────────────────────────────
+      {
+        label: 'Place Zephyr',
+        title: 'Placing Zephyr (WR2)',
+        subtitle: 'Zephyr has no OWN25 history. We apply the three rules in order, stopping at the first one that works.',
+        render() {
+          return `
+            <div class="content-grid">
+              <div>
+                <div class="regions-active">
+                  <span class="regions-active-label">Region under consideration</span>
+                  ${regionActiveBadge('WR')}
+                </div>
+                <div class="card" style="margin-bottom:12px">
+                  <div class="card-title">Team being placed</div>
+                  <div class="team-pill highlighted">
+                    <span class="team-name">Zephyr</span>
+                    ${badge('WR')}
+                    <span class="seed-num">WR2 · no OWN25</span>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-title">Rules (applied in order)</div>
+                  <div class="rule-card active">
+                    <div class="rule-num">✓ Rule 1 — Regional Separation</div>
+                    <div class="rule-text">The top two seeds from each region should be in separate pools so that the regionals final isn't replayed during pool play — they can only meet again in the bracket.</div>
+                    <div class="rule-result">WR1 = Mutiny → Pool B<br>Therefore Zephyr (WR2) → <span class="pool-a-label">Pool A</span> ✓</div>
+                  </div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">Rule 2 — Regional Balance</div>
+                    <div class="rule-text">Go to whichever pool currently has fewer teams from the same region. If tied on regional count, go to the pool with fewer teams overall.</div>
+                  </div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">Rule 3 — Regionals Matching</div>
+                    <div class="rule-text">Find a team from another region that finished at the same regionals position and go to the opposite pool from them.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Pools after this step</div>
+                ${poolsHTML(5, ['Zephyr'], true)}
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      // ── 5: Place Wits ────────────────────────────────────────────────────
+      {
+        label: 'Place Wits',
+        title: 'Placing Wits (NR3)',
+        subtitle: 'Wits has no OWN25 history. Rule 1 doesn\'t apply (NR3). Rule 2 (regional balance) applies — Pool A already has both other NR teams, so Wits goes to Pool B.',
+        render() {
+          const nrInA = STEP_POOL_STATE[5].A.filter(n => teamData(n).region === 'NR');
+          const nrInB = STEP_POOL_STATE[5].B.filter(n => teamData(n).region === 'NR');
+          return `
+            <div class="content-grid">
+              <div>
+                <div class="regions-active">
+                  <span class="regions-active-label">Region under consideration</span>
+                  ${regionActiveBadge('NR')}
+                </div>
+                <div class="card" style="margin-bottom:12px">
+                  <div class="card-title">Team being placed</div>
+                  <div class="team-pill highlighted">
+                    <span class="team-name">Wits</span>
+                    ${badge('NR')}
+                    <span class="seed-num">NR3 · no OWN25</span>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-title">Rules (applied in order)</div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">✗ Rule 1 — Regional Separation</div>
+                    <div class="rule-text">The top two seeds from each region should be in separate pools so that the regionals final isn't replayed during pool play — they can only meet again in the bracket. Wits is NR3 — Rule 1 does not apply.</div>
+                  </div>
+                  <div class="rule-card active">
+                    <div class="rule-num">✓ Rule 2 — Regional Balance</div>
+                    <div class="rule-text">Go to whichever pool currently has fewer teams from the same region. This keeps regional representation spread evenly so no pool ends up stacked with teams from a single region.</div>
+                    <div class="rule-result">
+                      Pool A has NR: ${nrInA.join(', ')} (${nrInA.length} teams)<br>
+                      Pool B has NR: ${nrInB.length === 0 ? 'none' : nrInB.join(', ')} (${nrInB.length} teams)<br>
+                      Pool B has fewer NR teams → Wits → <span class="pool-b-label">Pool B</span> ✓
+                    </div>
+                  </div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">Rule 3 — Combination Seeding</div>
+                    <div class="rule-text">Not needed — Rule 2 already determines the pool.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Pools after this step</div>
+                ${poolsHTML(6, ['Wits'], true)}
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      // ── 6: Place SA u20 ──────────────────────────────────────────────────
+      {
+        label: 'Place SA u20',
+        title: 'Placing SA u20 (ER3)',
+        subtitle: 'SA u20 has no OWN25 history. Rules 1 and 2 both fail — Rule 3 (combination seeding) determines their pool.',
+        render() {
+          return `
+            <div class="content-grid">
+              <div>
+                <div class="regions-active">
+                  <span class="regions-active-label">Region under consideration</span>
+                  ${regionActiveBadge('ER')}
+                </div>
+                <div class="card" style="margin-bottom:12px">
+                  <div class="card-title">Team being placed</div>
+                  <div class="team-pill highlighted">
+                    <span class="team-name">SA u20</span>
+                    ${badge('ER')}
+                    <span class="seed-num">ER3 · no OWN25</span>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-title">Rules (applied in order)</div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">✗ Rule 1 — Regional Separation</div>
+                    <div class="rule-text">The top two seeds from each region should be in separate pools so that the regionals final isn't replayed during pool play — they can only meet again in the bracket. SA u20 placed 3rd at ER Regionals — Rule 1 does not apply.</div>
+                  </div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">✗ Rule 2 — Regional Balance</div>
+                    <div class="rule-text">Go to whichever pool has fewer teams from the same region. At this point Pool A has 1 ER team (Donkeys) and Pool B has 1 ER team (Bunnies) — the count is tied, so Rule 2 cannot determine the pool.</div>
+                  </div>
+                  <div class="rule-card active">
+                    <div class="rule-num">✓ Rule 3 — Combination Seeding</div>
+                    <div class="rule-text">Find the already-placed team with the nearest combined score (nationals + regionals points), then go to the opposite pool. SA u20's combined score is 6. Gradient also has a combined score of 6 and is in Pool A.</div>
+                    <div class="rule-result">Nearest comparable: Gradient (combined 6) → Pool A<br>Therefore SA u20 → <span class="pool-b-label">Pool B</span> ✓</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Pools after this step</div>
+                ${poolsHTML(7, ['SA u20'], true)}
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      // ── 7: Place ManCubs ─────────────────────────────────────────────────
+      {
+        label: 'Place ManCubs',
+        title: 'Placing ManCubs (WR5)',
+        subtitle: 'ManCubs has no OWN25 history. Rule 1 doesn\'t apply (WR5). Rule 2 can\'t determine the pool — WR is tied 2–2. Rule 3 (combination seeding) decides.',
+        render() {
+          const wrInA = STEP_POOL_STATE[7].A.filter(n => teamData(n).region === 'WR');
+          const wrInB = STEP_POOL_STATE[7].B.filter(n => teamData(n).region === 'WR');
+          return `
+            <div class="content-grid">
+              <div>
+                <div class="regions-active">
+                  <span class="regions-active-label">Region under consideration</span>
+                  ${regionActiveBadge('WR')}
+                </div>
+                <div class="card" style="margin-bottom:12px">
+                  <div class="card-title">Team being placed</div>
+                  <div class="team-pill highlighted">
+                    <span class="team-name">ManCubs</span>
+                    ${badge('WR')}
+                    <span class="seed-num">WR5 · no OWN25</span>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-title">Rules (applied in order)</div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">✗ Rule 1 — Regional Separation</div>
+                    <div class="rule-text">Covers the top two seeds from each region. ManCubs is WR5 — Rule 1 does not apply.</div>
+                  </div>
+                  <div class="rule-card inactive">
+                    <div class="rule-num">✗ Rule 2 — Regional Balance</div>
+                    <div class="rule-text">Go to whichever pool has fewer teams from the same region.</div>
+                    <div class="rule-result">
+                      Pool A has WR: ${wrInA.join(', ')} (${wrInA.length} teams)<br>
+                      Pool B has WR: ${wrInB.join(', ')} (${wrInB.length} teams)<br>
+                      WR is tied 2–2 — Rule 2 cannot determine the pool.
+                    </div>
+                  </div>
+                  <div class="rule-card active">
+                    <div class="rule-num">✓ Rule 3 — Combination Seeding</div>
+                    <div class="rule-text">Find the already-placed team with the nearest combined score (nationals + regionals points), then go to the opposite pool.</div>
+                    <div class="rule-result">
+                      ManCubs' combined score: 1 (regionals 1 + nationals 0)<br>
+                      Nearest already-placed team: UFH — combined score 1 (regionals 0 + nationals 1) · Pool B<br>
+                      → ManCubs → <span class="pool-a-label">Pool A</span> ✓
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Pools after this step</div>
+                ${poolsHTML(8, ['ManCubs'], true)}
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      // ── 8: Final result ──────────────────────────────────────────────────
+      {
+        label: 'Final Pools',
+        title: 'Final Pool Assignment — OWN 2026 Opens (12-team / Donkeys scenario)',
+        subtitle: 'All 12 teams placed in two equal pools of 6. Click any team\'s "why?" button to see the rationale.',
+        render() {
+          const state = STEP_POOL_STATE[8];
+
+          const finalCard = (pool, teams) => {
+            const color      = pool === 'A' ? 'var(--pool-a)'      : 'var(--pool-b)';
+            const bgColor    = pool === 'A' ? 'var(--pool-a-bg)'   : 'var(--pool-b-bg)';
+            const lightColor = pool === 'A' ? 'var(--pool-a-light)': 'var(--pool-b-light)';
+            return `
+              <div style="background:${bgColor};border:1px solid ${color};border-radius:12px;padding:20px">
+                <div style="font-size:1rem;font-weight:800;color:${lightColor};text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.1)">
+                  Pool ${pool} — ${teams.length} teams
+                </div>
+                ${teams.map(n => {
+                  const t = teamData(n);
+                  const rationale = t.own25 !== null
+                    ? `OWN25 #${t.own25} → re-numbered #${t.own25Renum} → Group ${t.refGroup} → Pool ${t.pool}`
+                    : t.noOwn25Rule.reason;
+                  const ruleLabel = t.own25 !== null ? `OWN25 history` : `Rule ${t.noOwn25Rule.rule}`;
+                  return `
+                    <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+                      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                        <strong style="color:${lightColor}">${n}</strong>
+                        ${badge(t.region)}
+                        <span style="font-size:0.7rem;color:var(--muted);margin-left:auto">${ruleLabel}</span>
+                        <button class="rationale-btn" onclick="toggleRationale('final-${n.replace(/\s+/g,'-')}')">why?</button>
+                      </div>
+                      <div class="rationale-text" id="final-${n.replace(/\s+/g,'-')}">${rationale}</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `;
+          };
+
+          return `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              ${finalCard('A', state.A)}
+              ${finalCard('B', state.B)}
+            </div>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+              <div class="info-box warn">
+                <strong>Key differences from the 11-team draw:</strong> With Donkeys attending, the 8-team OWN25 snake produces a 4–4 split (vs 4–3). Maties lands in Pool B (not Pool A). Wits goes to Pool B via Rule 2 regional balance (NR was 2–0 before Wits is placed). SA u20 goes to Pool B via Rule 3 combination seeding — combined score 6, same as Gradient (6, Pool A). ManCubs goes to Pool A via Rule 3 combination seeding — combined score 1, same as UFH (1, Pool B). Pools are equal at 6 each.
+              </div>
+              <div class="info-box note">
+                <strong>Goal 1 — OWN25 seeding is the primary method.</strong> Teams that performed at similar levels at OWN 2025 are spread across different pools via the snake, so they meet in the bracket rather than pool play.
+              </div>
+              <div class="info-box note">
+                <strong>Goal 2 — Regionals finals aren't replayed in pool play.</strong> Rule 1 keeps the top two seeds from each region in separate pools. For ER, the snake handles this naturally: Donkeys (ER1) → Pool A, Bunnies (ER2) → Pool B.
+              </div>
+              <div class="info-box note">
+                <strong>Goal 3 — Keep regional representation balanced.</strong> Rule 2 (regional balance) ensures no pool ends up stacked with teams from a single region. Applied before regionals matching, it keeps NR split 2–1 across pools rather than 3–0.
+              </div>
+              <div class="info-box note">
+                <strong>Goal 4 — Spread similarly-ranked teams across pools.</strong> Rule 3 (regionals matching) resolves placements when Goals 1–3 don't determine them.
+              </div>
+            </div>
+          `;
+        }
+      },
+    ];
+
+    // ─── State & Navigation ───────────────────────────────────────────────
+
+    let currentStep = 0;
+
+    function render() {
+      const step   = STEPS[currentStep];
+      const total  = STEPS.length;
+      const stepNum = currentStep + 1;
+
+      document.getElementById('stepCounter').textContent = `Step ${stepNum} of ${total}`;
+      document.getElementById('stepLabel').textContent   = `Step ${stepNum} of ${total} — ${step.label}`;
+      document.getElementById('stepTitle').textContent   = step.title;
+      document.getElementById('stepSubtitle').textContent = step.subtitle;
+      document.getElementById('progressFill').style.width = `${(stepNum / total) * 100}%`;
+
+      const content = document.getElementById('stepContent');
+      content.className = 'step-content';
+      content.innerHTML = step.render();
+      void content.offsetWidth;
+
+      document.getElementById('btnPrev').disabled = currentStep === 0;
+      document.getElementById('btnNext').disabled = currentStep === total - 1;
+      document.getElementById('btnNext').textContent = currentStep === total - 2 ? 'Final Result →' : 'Next →';
+      document.getElementById('btnSkip').style.display         = currentStep === total - 1 ? 'none' : '';
+      document.getElementById('btnBackToStart').style.display  = currentStep === 0 ? 'none' : '';
+    }
+
+    function navigate(dir) {
+      const next = currentStep + dir;
+      if (next >= 0 && next < STEPS.length) {
+        currentStep = next;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function backToStart() {
+      currentStep = 0;
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function skipToEnd() {
+      currentStep = STEPS.length - 1;
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+    });
+
+    render();
+  </script>
+</body>
+</html>
