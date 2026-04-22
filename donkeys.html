@@ -507,19 +507,19 @@
       { name: 'Donkeys',  region: 'ER', regSeed: 1, own25: 2,  own25Renum: 2, refGroup: 'B', pool: 'A', noOwn25Rule: null },
       { name: 'Rex',      region: 'NR', regSeed: 1, own25: 3,  own25Renum: 3, refGroup: 'B', pool: 'A', noOwn25Rule: null },
       { name: 'Maties',   region: 'WR', regSeed: 3, own25: 5,  own25Renum: 4, refGroup: 'A', pool: 'B', noOwn25Rule: null },
-      { name: 'Bunnies',  region: 'ER', regSeed: 2, own25: 6,  own25Renum: 5, refGroup: 'A', pool: 'B', noOwn25Rule: null },
-      { name: 'Kaalvoet', region: 'NR', regSeed: 2, own25: 7,  own25Renum: 6, refGroup: 'B', pool: 'A', noOwn25Rule: null },
+      { name: 'Kaalvoet', region: 'NR', regSeed: 2, own25: 6,  own25Renum: 5, refGroup: 'A', pool: 'B', noOwn25Rule: null },
+      { name: 'Bunnies',  region: 'ER', regSeed: 2, own25: 7,  own25Renum: 6, refGroup: 'B', pool: 'A', noOwn25Rule: null },
       { name: 'Gradient', region: 'WR', regSeed: 4, own25: 8,  own25Renum: 7, refGroup: 'B', pool: 'A', noOwn25Rule: null },
       { name: 'UFH',      region: 'SR', regSeed: 1, own25: 10, own25Renum: 8, refGroup: 'A', pool: 'B', noOwn25Rule: null },
       { name: 'Zephyr',   region: 'WR', regSeed: 2, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 1, reason: 'WR1 Mutiny is in Pool B — Zephyr (WR2) must be in a different pool from their region\'s 1st seed.' } },
       { name: 'SA u20',   region: 'ER', regSeed: 3, own25: null, own25Renum: null, refGroup: null, pool: 'B', noOwn25Rule: { rule: 3, reason: 'SA u20\'s combined score (nationals + regionals) is 6, the same as Gradient (also 6), who is in Pool A. SA u20 goes to Pool B — the opposite pool from their nearest comparable.' } },
-      { name: 'Wits',     region: 'NR', regSeed: 3, own25: null, own25Renum: null, refGroup: null, pool: 'B', noOwn25Rule: { rule: 2, reason: 'Pool A already has Rex (NR1) and Kaalvoet (NR2). Pool B has no NR teams yet. Rule 2 (regional balance) sends Wits to Pool B.' } },
+      { name: 'Wits',     region: 'NR', regSeed: 3, own25: null, own25Renum: null, refGroup: null, pool: 'B', noOwn25Rule: { rule: 1, reason: 'NR1 Rex is in Pool A — Wits (NR3) must be in a different pool from their region\'s 1st seed.' } },
       { name: 'ManCubs',  region: 'WR', regSeed: 5, own25: null, own25Renum: null, refGroup: null, pool: 'A', noOwn25Rule: { rule: 3, reason: 'ManCubs\' combined score (nationals + regionals) is 1, the same as UFH (also 1), who is in Pool B. ManCubs goes to Pool A — the opposite pool from their nearest comparable.' } },
     ];
 
     // ABBA snake for 8 teams: A,B,B,A,A,B,B,A
-    // Group A (→ Pool B): Mutiny(1), Maties(4), Bunnies(5), UFH(8)
-    // Group B (→ Pool A): Donkeys(2), Rex(3), Kaalvoet(6), Gradient(7)
+    // Group A (→ Pool B): Mutiny(1), Maties(4), Kaalvoet(5), UFH(8)
+    // Group B (→ Pool A): Donkeys(2), Rex(3), Bunnies(6), Gradient(7)
     const OWN25_TEAMS    = ALL_TEAMS.filter(t => t.own25 !== null).sort((a, b) => a.own25Renum - b.own25Renum);
     const NO_OWN25_TEAMS = [
       ALL_TEAMS.find(t => t.name === 'Zephyr'),
@@ -534,11 +534,11 @@
       { A: [], B: [] }, // 1
       { A: [], B: [] }, // 2
       { A: [], B: [] }, // 3
-      { A: ['Donkeys','Rex','Kaalvoet','Gradient'], B: ['Mutiny','Maties','Bunnies','UFH'] }, // 4
-      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr'], B: ['Mutiny','Maties','Bunnies','UFH'] }, // 5
-      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr'], B: ['Mutiny','Maties','Bunnies','UFH','Wits'] }, // 6 — after Wits
-      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr'], B: ['Mutiny','Maties','Bunnies','UFH','Wits','SA u20'] }, // 7 — after SA u20
-      { A: ['Donkeys','Rex','Kaalvoet','Gradient','Zephyr','ManCubs'], B: ['Mutiny','Maties','Bunnies','UFH','Wits','SA u20'] }, // 8
+      { A: ['Donkeys','Rex','Bunnies','Gradient'], B: ['Mutiny','Maties','Kaalvoet','UFH'] }, // 4
+      { A: ['Donkeys','Rex','Bunnies','Gradient','Zephyr'], B: ['Mutiny','Maties','Kaalvoet','UFH'] }, // 5
+      { A: ['Donkeys','Rex','Bunnies','Gradient','Zephyr'], B: ['Mutiny','Maties','Kaalvoet','UFH','Wits'] }, // 6 — after Wits
+      { A: ['Donkeys','Rex','Bunnies','Gradient','Zephyr'], B: ['Mutiny','Maties','Kaalvoet','UFH','Wits','SA u20'] }, // 7 — after SA u20
+      { A: ['Donkeys','Rex','Bunnies','Gradient','Zephyr','ManCubs'], B: ['Mutiny','Maties','Kaalvoet','UFH','Wits','SA u20'] }, // 8
     ];
 
     function teamData(name) { return ALL_TEAMS.find(t => t.name === name); }
